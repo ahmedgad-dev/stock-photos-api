@@ -14,6 +14,7 @@ function App() {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
   const [newImages, setnewImages] = useState(false)
+
   const mounted = useRef(false)
 
   const fetchImage = async() => {
@@ -34,9 +35,9 @@ function App() {
         if(query && page=== 1){
             return data.results
         } else if(query.length > 1){      
-             return [...oldPhotos,...data.results]  
-        } else {
-          return [...oldPhotos,...data]  
+             return [...oldPhotos,...data.results]  // spread the old photos to find them when scroll up
+        } else {                                    // spread data.results because these are the items returned from the search in API
+          return [...oldPhotos,...data]  // spread only the existing data if user doesn't type in search
         }
       })
       setnewImages(false)
@@ -53,11 +54,13 @@ function App() {
     // eslint-disable-next-line
   }, [page])
 
-  // This code so that this fetch doesn't render on the initial run
+  
+  // This useEffect is responsible for fetching images as we scroll down the page
   useEffect(() => {
+    // This code so that this fetch doesn't render on the initial run
     if(!mounted.current){
-          mounted.current = true
-          return
+         mounted.current = true
+         return
     } else if(loading){
       return
     } else if(!newImages){
@@ -66,10 +69,11 @@ function App() {
     setPage((oldPage) => {
       return oldPage + 1
     })
+    // eslint-disable-next-line
   }, [newImages])
-
+     //same as adding callback function to the event listener
   const event = (e) => {
-    if((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 2){
+    if((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 2){ // -2 to fetch the images before getting to the end
           setnewImages(true)
        }
     }
@@ -102,7 +106,7 @@ function App() {
             className='form-input'
           />
           <button type='submit' className='submit-btn'>
-            <FaSearch />
+            <FaSearch style={{cursor: 'pointer'}}/>
           </button>
         </form>
       </section>
