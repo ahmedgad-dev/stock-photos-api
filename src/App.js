@@ -15,7 +15,7 @@ function App() {
   const [page, setPage] = useState(1)
   const [newImages, setnewImages] = useState(false)
 
-  const mounted = useRef(false)
+  const mounted = useRef(false) //use ref doesn't initiate a re-render
 
   const fetchImage = async() => {
     setLoading(true)
@@ -71,6 +71,8 @@ function App() {
     })
     // eslint-disable-next-line
   }, [newImages])
+
+
      //same as adding callback function to the event listener
   const event = (e) => {
     if((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 2){ // -2 to fetch the images before getting to the end
@@ -86,7 +88,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if(!query){
+    if(!query){ //empty query
       return
     } else if(page===1) {
         fetchImage() 
